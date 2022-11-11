@@ -1,0 +1,63 @@
+@page "/Register"
+@using HttpClients.ClientInterfaces
+@using Domain.DTOs
+@inject IUserService UserService
+
+<h3>Register</h3>
+
+<div class="card">
+    <div class="field">
+        <label>User name:</label>
+        <input type="text" @bind="_username" @bind:event="oninput"/>
+    </div>
+    <div class="field">
+        <label style="text-align: center">Password:</label>
+        <input type="password" @bind="_password" @bind:event="oninput"/>
+    </div>
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <div class="field">
+            <label style="color: @_color">
+                @_message
+            </label>
+        </div>
+    }
+    <div class="field">
+        <button class="acceptbtn" disabled="@(IsInvalidUser())" @onclick="RegisterUser">Register</button>
+    </div>
+</div>
+
+@code {
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+    private string _color = string.Empty;
+    private string _message = string.Empty;
+
+    private async Task RegisterUser()
+    {
+        _message = string.Empty;
+
+        try
+        {
+            await UserService.CreateAsync(new UserCreateDto()
+            {
+                Username = _username,
+                Password = _password
+            });
+
+            _color = "green";
+            _message = "Success!";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            _color = "red";
+            _message = $"Error: {e.Message}";
+        }
+    }
+
+    private bool IsInvalidUser()
+    {
+        return string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password);
+    }
+}
