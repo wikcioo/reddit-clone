@@ -1,0 +1,59 @@
+@page "/CreatePost"
+@using HttpClients.ClientInterfaces
+@using Domain.DTOs
+@inject IPostService PostService
+
+<div class="card">
+    <h3>Create Post</h3>
+    <div class="form-group field">
+        <label>Title</label>
+        <input type="text" @bind="_title" @bind:event="oninput"/>
+    </div>
+    <div class="form-group field">
+        <label>Content</label>
+        <input type="text" @bind="_content" @bind:event="oninput"/>
+    </div>
+    <div class="button-row">
+        <button @onclick="CreateAsync" disabled="@(IsInvalidPost())" class="acceptbtn">Create</button>
+    </div>
+    @if (!string.IsNullOrEmpty(_message))
+    {
+        <label style="color:@_color">@_message</label>
+    }
+</div>
+
+@code {
+    private string _title   = string.Empty;
+    private string _content = string.Empty;
+    private string _color   = string.Empty;
+    private string _message = string.Empty;
+
+    private async Task CreateAsync()
+    {
+        _message = string.Empty;
+
+        try
+        {
+            await PostService.CreateAsync(new PostCreateDto()
+            {
+                Username = "bob",
+                Title = _title,
+                Content = _content
+            });
+            
+            _message = "Post created successfully!";
+            _color = "green";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            _message = e.Message;
+            _color = "red";
+        }
+    }
+
+    private bool IsInvalidPost()
+    {
+        return string.IsNullOrEmpty(_title) || string.IsNullOrEmpty(_content);
+    }
+}
