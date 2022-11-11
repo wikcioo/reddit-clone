@@ -1,0 +1,46 @@
+@page "/ViewPost/{id:int}"
+@using HttpClients.ClientInterfaces
+@using Domain.Models
+@inject IPostService PostService;
+
+<div class="card">
+    @if (_post == null)
+    {
+        <span>Loading data...</span>
+    }
+    else
+    {
+        <span>Owner's Username: @_post.Owner.Username</span>
+        <span>Title: @_post.Title</span>
+        <span>Content: @_post.Content</span>
+    }
+    
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <label style="color: red">@_errorMessage</label>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Post? _post;
+    private string _errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _errorMessage = string.Empty;
+
+        try
+        {
+            _post = await PostService.GetByIdAsync(Id);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            _errorMessage = e.Message;
+        }
+    }
+
+}
