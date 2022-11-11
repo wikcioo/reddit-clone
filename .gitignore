@@ -1,0 +1,10 @@
+bin/
+obj/
+**/bin/
+**/obj/
+.idea/
+/packages/
+/_ReSharper.Caches/
+riderModule.iml
+WebApi/data.json
+WebApi/bin/Debug/net6.0/data.json
