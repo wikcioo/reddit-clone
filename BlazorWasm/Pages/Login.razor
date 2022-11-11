@@ -1,0 +1,59 @@
+﻿@page "/Login"
+@using HttpClients.ClientInterfaces
+@inject IAuthService AuthService
+@inject NavigationManager NavMgr
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div class="card">
+            <h3>Please login</h3>
+            <div class="field">
+                <label>User name:</label>
+                <input type="text" @bind="_username"/>
+            </div>
+            <div class="field">
+                <label style="text-align: center">Password:</label>
+                <input type="password" @bind="_password"/>
+            </div>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <div class="field">
+                    <label style="color: red">
+                        @_errorMessage
+                    </label>
+                </div>
+            }
+            <div class="field">
+                <button class="acceptbtn" @onclick="LoginAsync">Log in</button>
+            </div>
+        </div>
+    </NotAuthorized>
+    
+    <Authorized>
+        <div class="card">
+            <h3>Hello, @context.User.Identity!.Name</h3>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+    private string _errorMessage = string.Empty;
+
+    private async Task LoginAsync()
+    {
+        _errorMessage = string.Empty;
+        
+        try
+        {
+            await AuthService.LoginAsync(_username, _password);
+            NavMgr.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            _errorMessage = $"Error: {e.Message}";
+        }
+    }
+}
