@@ -1,0 +1,66 @@
+@page "/ViewPosts"
+@using HttpClients.ClientInterfaces
+@using Domain.Models
+@inject IPostService PostService
+@inject NavigationManager NavMgr
+
+<h3>View All Posts</h3>
+
+@{
+    if (_posts == null)
+    {
+        <span>Loading...</span>
+    }
+    else if (!_posts.Any())
+    {
+        <span>No Posts available</span>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Title</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var post in _posts)
+            {
+                <tr style="cursor: pointer" @onclick="@(() => NavMgr.NavigateTo($"/ViewPost/{post.Id}"))">
+                    <td>@post.Id</td>
+                    <td>@post.Owner.Username</td>
+                    <td>@post.Title</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
+    if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <label style="color: red">@_errorMessage</label>
+    }
+}
+
+@code {
+    private IEnumerable<Post>? _posts;
+    private string _errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _errorMessage = string.Empty;
+        
+        try
+        {
+            _posts = await PostService.GetAllAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            _errorMessage = e.Message;
+        }
+    }
+
+}
