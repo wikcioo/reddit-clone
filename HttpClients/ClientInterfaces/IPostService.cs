@@ -5,7 +5,7 @@ namespace HttpClients.ClientInterfaces;
 
 public interface IPostService
 {
-    Task CreateAsync(PostCreateDto dto);
+    Task CreateAsync(PostCreateRequestDto dto);
     Task<Post> GetByIdAsync(int id);
     Task<IEnumerable<Post>> GetAllAsync();
 }

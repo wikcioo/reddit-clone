@@ -34,21 +34,19 @@
 
         try
         {
-            await PostService.CreateAsync(new PostCreateDto()
+            await PostService.CreateAsync(new PostCreateRequestDto()
             {
-                Username = "bob",
                 Title = _title,
                 Content = _content
             });
             
-            _message = "Post created successfully!";
             _color = "green";
+            _message = "Post created successfully!";
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            _message = e.Message;
             _color = "red";
+            _message = "Not logged in!";
         }
     }
 
