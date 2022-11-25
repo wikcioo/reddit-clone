@@ -1,17 +1,31 @@
 ﻿using Application.DaoInterfaces;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EfcStorage.DAOs;
 
 public class UserEfcDao : IUserDao
 {
-    public Task<User> CreateAsync(User user)
+    private readonly EfcContext _context;
+
+    public UserEfcDao(EfcContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<User?> GetByUsernameAsync(string username)
+    public async Task<User> CreateAsync(User user)
     {
-        throw new NotImplementedException();
+        var newUser = await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return newUser.Entity;
+    }
+
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        var existing = await _context.Users.FirstOrDefaultAsync(
+            user => user.Username.ToLower().Equals(username.ToLower())
+        );
+
+        return existing;
     }
 }
