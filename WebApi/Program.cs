@@ -2,6 +2,7 @@ using System.Text;
 using Application.DaoInterfaces;
 using Application.LogicImplementations;
 using Application.LogicInterfaces;
+using EfcStorage.DAOs;
 using FileStorage;
 using FileStorage.DAOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,10 +19,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<FileContext>();
 
-builder.Services.AddScoped<IUserDao, UserFileDao>();
+// builder.Services.AddScoped<IUserDao, UserFileDao>();
+builder.Services.AddScoped<IUserDao, UserEfcDao>();
 builder.Services.AddScoped<IUserLogic, UserLogic>();
 
-builder.Services.AddScoped<IPostDao, PostFileDao>();
+// builder.Services.AddScoped<IPostDao, PostFileDao>();
+builder.Services.AddScoped<IPostDao, PostEfcDao>();
 builder.Services.AddScoped<IPostLogic, PostLogic>();
 
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();
