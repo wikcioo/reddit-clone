@@ -1,22 +1,37 @@
 ﻿using Application.DaoInterfaces;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EfcStorage.DAOs;
 
 public class PostEfcDao : IPostDao
 {
-    public Task<Post> CreateAsync(Post post)
+    private readonly EfcContext _context;
+
+    public PostEfcDao(EfcContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<Post?> GetByIdAsync(int id)
+    public async Task<Post> CreateAsync(Post post)
     {
-        throw new NotImplementedException();
+        var newPost = await _context.Posts.AddAsync(post);
+        await _context.SaveChangesAsync();
+        return newPost.Entity;
+    }
+
+    public async Task<Post?> GetByIdAsync(int id)
+    {
+        var existing = await _context.Posts
+            .AsNoTracking()
+            .Include(post => post.Owner)
+            .SingleOrDefaultAsync(post => post.Id == id);
+        
+        return existing;
     }
 
     public Task<IEnumerable<Post>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return Task.FromResult(_context.Posts.Include(post => post.Owner).AsEnumerable());
     }
 }
