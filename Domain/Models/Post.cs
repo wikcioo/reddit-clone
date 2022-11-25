@@ -7,6 +7,10 @@ public class Post
     public string Content { get; set; }
     public User Owner { get; set; }
 
+    private Post()
+    {
+    }
+
     public Post(string title, string content, User owner)
     {
         Title = title;
