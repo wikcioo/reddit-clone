@@ -8,3 +8,4 @@ obj/
 riderModule.iml
 WebApi/data.json
 WebApi/bin/Debug/net6.0/data.json
+EfcStorage/RedditClone.db
