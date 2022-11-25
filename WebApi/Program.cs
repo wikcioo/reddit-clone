@@ -2,9 +2,9 @@ using System.Text;
 using Application.DaoInterfaces;
 using Application.LogicImplementations;
 using Application.LogicInterfaces;
+using EfcStorage;
 using EfcStorage.DAOs;
 using FileStorage;
-using FileStorage.DAOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -28,6 +28,8 @@ builder.Services.AddScoped<IPostDao, PostEfcDao>();
 builder.Services.AddScoped<IPostLogic, PostLogic>();
 
 builder.Services.AddScoped<IAuthLogic, AuthLogic>();
+
+builder.Services.AddDbContext<EfcContext>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
